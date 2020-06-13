@@ -1,20 +1,27 @@
-const usersRouter = require("express").Router();
-const promise = require('fs').promises;
-const users = require('../data/users');
-usersRouter.get("/", (req, res) => {
-  promise.readFile('./data/users.json')
-  .then((data) => {
-    res.status(200).send(JSON.parse(data));
-  })
-  .catch((err) => {
-    console.log(err);
-  });
+const usersRouter = require('express').Router();
+const path = require('path');
+const fs = require('fs');
+
+const usersPath = path.join(__dirname, '../data/users.json');
+const readUsersPath = fs.readFileSync(usersPath);
+const users = JSON.parse(readUsersPath);
+
+usersRouter.get('/', (req, res) => {
+  if (!users) {
+    res.status(404).send({ message: 'Запрашиваемый ресурс не найден' });
+  } res.send(users);
 });
-usersRouter.get("/:id", (req, res) => {
-  if(!users[req.params.id]) {
-    res.send({ "message": "Нет пользователя с таким id" });
+
+function getUser(id) {
+  return users.find((el) => el._id === id);
+}
+
+usersRouter.get('/:id', (req, res) => {
+  if (getUser(req.params.id)) {
+    res.send(getUser(req.params.id));
     return;
   }
-  res.send(users[req.params.id]);
+  res.status(404).send({ message: 'Нет пользователя с таким id' });
 });
+
 module.exports = usersRouter;
