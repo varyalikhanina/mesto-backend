@@ -4,7 +4,15 @@ const fs = require('fs');
 
 const usersPath = path.join(__dirname, '../data/users.json');
 const readUsersPath = fs.readFileSync(usersPath);
-const users = JSON.parse(readUsersPath);
+let users;
+
+try {
+  users = JSON.parse(readUsersPath);
+} catch (e) {
+  usersRouter.get('/', (req, res) => {
+    res.status(500).send({ message: 'Что-то сломалось' });
+  });
+}
 
 usersRouter.get('/', (req, res) => {
   if (!users) {
@@ -13,6 +21,7 @@ usersRouter.get('/', (req, res) => {
 });
 
 function getUser(id) {
+  /* eslint no-underscore-dangle: ["error", { "allow": ["_id"] }] */
   return users.find((el) => el._id === id);
 }
 

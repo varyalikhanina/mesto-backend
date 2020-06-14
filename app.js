@@ -15,5 +15,6 @@ app.use((req, res) => {
 });
 
 app.listen(PORT, () => {
+  /* eslint no-console: ["error", { allow: ["log"] }] */
   console.log(`App listening on port ${PORT}`);
 });
