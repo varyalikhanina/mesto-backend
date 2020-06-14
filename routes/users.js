@@ -2,21 +2,21 @@ const usersRouter = require('express').Router();
 const path = require('path');
 const fs = require('fs');
 
-const usersPath = path.join(__dirname, '../data/users.json');
-const readUsersPath = fs.readFileSync(usersPath);
 let users;
 
 try {
+  const usersPath = path.join(__dirname, '../data/users.json');
+  const readUsersPath = fs.readFileSync(usersPath);
   users = JSON.parse(readUsersPath);
 } catch (e) {
-  usersRouter.get('/', (req, res) => {
-    res.status(500).send({ message: 'Что-то сломалось' });
-  });
+  /* eslint no-console: ["error", { allow: ["error"] }] */
+  console.error('Что-то сломалось');
 }
 
 usersRouter.get('/', (req, res) => {
   if (!users) {
     res.status(404).send({ message: 'Запрашиваемый ресурс не найден' });
+    return;
   } res.send(users);
 });
 
