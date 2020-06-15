@@ -1,0 +1,21 @@
+.user-info__edit {
+    width: 38px;
+    min-height: 18px;
+    border: 1px solid #FFFFFF;
+    font-family: Inter;
+    font-weight: normal;
+    font-size: 12px;
+    line-height: 15px;
+    text-align: center;
+    background-color: #000;
+    color: #fff;
+    padding: auto 7px;
+    margin-top: 24px;
+    transition: .1s ease-in-out;
+}
+
+.user-info__edit:hover {
+    background-color: #fff;
+    color: #000;
+    border-radius: 5px;
+}
