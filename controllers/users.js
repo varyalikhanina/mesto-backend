@@ -19,10 +19,10 @@ const getUserById = (req, res) => {
       if (user !== null) {
         res.status(200).res.send({ data: user });
       } else {
-        res.status(404).send({ data: user, message: 'Нет пользователя с таким ID' });
+        res.status(404).send({ message: 'Нет пользователя с таким ID' });
       }
     })
-    .catch(() => res.status(404).send({ message: 'Нет пользователя с таким ID' }));
+    .catch(() => res.status(500).send({ message: 'Нет пользователя с таким ID' }));
 };
 
 module.exports = {
