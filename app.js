@@ -1,4 +1,3 @@
-const path = require('path');
 const express = require('express');
 const mongoose = require('mongoose');
 const { json } = require('body-parser');
@@ -14,8 +13,8 @@ mongoose.connect('mongodb://localhost:27017/mestodb', {
   useCreateIndex: true,
   useFindAndModify: false,
 });
+
 app.use(json());
-app.use(express.static(path.join(__dirname, 'public/dist')));
 app.use((req, res, next) => {
   req.user = {
     _id: '5ef63bc6683a6505865b1339',

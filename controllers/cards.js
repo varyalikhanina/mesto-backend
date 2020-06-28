@@ -15,9 +15,15 @@ const getAllCards = (req, res) => {
 };
 
 const deleteCardbyId = (req, res) => {
-  Card.findByIdAndRemove(req.params.id)
-    .then((user) => res.send({ data: user }))
-    .catch((err) => res.status(500).send({ message: err.message }));
+  Card.findByIdAndRemove(req.params.cardId)
+    .then((card) => {
+      if (card !== null) {
+        res.send({ data: card });
+      } else {
+        res.status(200).send({ data: card, message: 'Нет карточки с таким ID' });
+      }
+    })
+    .catch((err) => res.status(404).send({ message: err.message }));
 };
 
 module.exports = {
