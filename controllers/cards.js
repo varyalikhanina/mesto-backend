@@ -15,12 +15,15 @@ const getAllCards = (req, res) => {
 };
 
 const deleteCardbyId = (req, res) => {
-  Card.findByIdAndRemove(req.params.id)
+  Card.findById(req.params.id)
+    .orFail(() => res.status(404).send({ message: 'Карточки с таким ID не существует' }))
     .then((card) => {
-      if (card !== null) {
-        res.send({ data: card });
+      const { owner } = card;
+      if (req.user._id === owner.toString()) {
+        Card.findByIdAndRemove(req.params.id)
+          .then(() => res.status(200).send({ message: 'Карточка удалена' }));
       } else {
-        res.status(404).send({ message: 'Нет карточки с таким ID' });
+        return res.status(403).send({ message: 'Вы не можете удалить чужую карточку' });
       }
     })
     .catch((err) => res.status(500).send({ message: err.message }));
