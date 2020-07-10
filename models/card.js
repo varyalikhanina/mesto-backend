@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const validator = require('validator');
 
 const cardSchema = new mongoose.Schema({
   name: {
@@ -10,6 +11,12 @@ const cardSchema = new mongoose.Schema({
   link: {
     type: String,
     required: true,
+    validate: {
+      validator(link) {
+        return validator.isURL(link);
+      },
+      message: 'Здесь должна быть ссылка на картинку',
+    },
   },
   owner: {
     type: mongoose.Schema.Types.ObjectId,
@@ -28,11 +35,5 @@ const cardSchema = new mongoose.Schema({
     default: Date.now(),
   },
 });
-
-const validator = function validator(value) {
-  return /(http:\/\/|https:\/\/)((([w]{3})?\.?((\w*\.)*)?[a-z]{2,6}((\/\w*)*)?)|((1?[0-9]?[0-9]\.|2?[0-5]?[0-5]\.){3}(1?[0-9]?[0-9]|2?[0-5]?[0-5])))(:(6[1-4][0-9]{3}|65[1-4][0-9]{2}|655[1-2][0-9]|6553[1-5]|[1-5]?[0-9]{2,4}))?/.test(value);
-};
-
-cardSchema.path('link').validate(validator, 'Здесь должна быть ссылка');
 
 module.exports = mongoose.model('card', cardSchema);

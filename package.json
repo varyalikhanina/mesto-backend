@@ -1,5 +1,5 @@
 {
-  "name": "sprint-13",
+  "name": "sprint-14",
   "version": "1.0.0",
   "main": "app.js",
   "scripts": {
@@ -19,11 +19,14 @@
     "nodemon": "^2.0.4"
   },
   "dependencies": {
+    "bcryptjs": "^2.4.3",
     "body-parser": "^1.19.0",
     "core-js": "^3.1.4",
     "express": "^4.17.1",
-    "mongoose": "^5.9.20"
+    "jsonwebtoken": "^8.5.1",
+    "mongoose": "^5.9.20",
+    "validator": "^13.1.1"
   },
   "keywords": [],
-  "description": "Yandex.Praktikum Sprint 13 Project"
+  "description": "Yandex.Praktikum Sprint 14 Project"
 }
