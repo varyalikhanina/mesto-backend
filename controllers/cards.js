@@ -15,13 +15,13 @@ const getAllCards = (req, res) => {
 };
 
 const deleteCardbyId = (req, res) => {
-  Card.findById(req.user._id)
-    .orFail(() => res.send({ message: 'Карточки с таким ID не существует' }))
+  Card.findById(req.user.id)
+    .orFail(() => res.status(404).send({ message: 'Карточки с таким ID не существует' }))
     .then((card) => {
       const { owner } = card;
       if (req.user._id === owner.toString()) {
         return Card.findByIdAndRemove(req.user._id);
-      } return Promise.reject(new Error('Вы не можете удалить чужую карточку'));
+      } res.status(403).send({ message: 'Вы не можете удалить чужую карточку' });
     })
     .catch((err) => res.status(500).send({ message: err.message }));
 };
