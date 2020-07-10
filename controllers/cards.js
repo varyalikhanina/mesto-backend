@@ -20,8 +20,11 @@ const deleteCardbyId = (req, res) => {
     .then((card) => {
       const { owner } = card;
       if (req.user._id === owner.toString()) {
-        res.status(200).send(Card.findByIdAndRemove(req.params.id));
-      } res.status(403).send({ message: 'Вы не можете удалить чужую карточку' });
+        Card.findByIdAndRemove(req.params.id)
+          .then(() => res.status(200).send({ message: 'Карточка удалена' }));
+      } else {
+        return res.status(403).send({ message: 'Вы не можете удалить чужую карточку' });
+      }
     })
     .catch((err) => res.status(500).send({ message: err.message }));
 };
