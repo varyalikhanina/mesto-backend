@@ -2,7 +2,11 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const User = require('../models/user');
 
-const login = (req, res) => {
+const NotFoundError = require('../errors/not-found');
+const Unathorized = require('../errors/unathorized');
+const BadRequest = require('../errors/bad-request');
+
+const login = (req, res, next) => {
   const { email, password } = req.body;
   return User.findUserByCredentials(email, password)
     .then((user) => {
@@ -11,11 +15,11 @@ const login = (req, res) => {
       });
     })
     .catch(() => {
-      res.status(401).send({ message: 'Неверная почта или пароль' });
+      next(new Unathorized('Неверная почта или пароль'));
     });
 };
 
-const createUser = (req, res) => {
+const createUser = (req, res, next) => {
   const {
     name, about, avatar, email, password,
   } = req.body;
@@ -34,25 +38,25 @@ const createUser = (req, res) => {
       avatar: user.avatar,
       email: user.email,
     }))
-    .catch((err) => res.status(500).send({ message: err.message }));
+    .catch(() => next(new BadRequest('Введите имя, информацию о себе, ссылку на аватар, почту и пароль')));
 };
 
-const getAllUsers = (req, res) => {
+const getAllUsers = (req, res, next) => {
   User.find({})
     .then((user) => res.send({ data: user }))
-    .catch((err) => res.status(500).send({ message: err.message }));
+    .catch(next);
 };
 
-const getUserById = (req, res) => {
+const getUserById = (req, res, next) => {
   User.findById(req.params.id)
     .then((user) => {
       if (user !== null) {
         res.send({ data: user });
       } else {
-        res.status(404).send({ message: 'Нет пользователя с таким ID' });
+        throw new NotFoundError('Нет пользователя с таким ID');
       }
     })
-    .catch((err) => res.status(500).send({ message: err.message }));
+    .catch(next);
 };
 
 module.exports = {
