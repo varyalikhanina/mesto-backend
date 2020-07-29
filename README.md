@@ -10,6 +10,9 @@
 
 [http://www.varyalikhanina.cf/](http://www.varyalikhanina.cf/)
 
+## Публичный IPv4
+84.201.158.235
+
 ## Установка
 
 Склонируйте Mesto
