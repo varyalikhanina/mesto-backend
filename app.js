@@ -3,6 +3,9 @@ require('dotenv').config();
 const mongoose = require('mongoose');
 const { json } = require('body-parser');
 const { celebrate, Joi, errors } = require('celebrate');
+const validator = require('validator');
+const BadRequest = require('./errors/bad-request');
+const NotFoundError = require('./errors/not-found');
 const cards = require('./routes/cards');
 const users = require('./routes/users');
 const { createUser, login } = require('./controllers/users');
@@ -46,6 +49,13 @@ app.post(
     body: Joi.object().keys({
       name: Joi.string().required().min(2).max(30),
       about: Joi.string().required().min(2).max(30),
+      avatar: Joi.required().custom((value) => {
+        if (!validator.isURL(value)) {
+          throw new BadRequest('Здесь должна быть ссылка на картинку');
+        } else {
+          return value;
+        }
+      }),
       email: Joi.string().required().email(),
       password: Joi.string().required().min(8),
     }),
@@ -60,7 +70,12 @@ app.use(errorLogger);
 
 app.use(errors());
 
-app.use((err, req, res) => {
+app.use((req, res, next) => {
+  next(new NotFoundError('Запрашиваемый ресурс не найден'));
+});
+
+// eslint-disable-next-line no-unused-vars
+app.use((err, req, res, next) => {
   const { statusCode = 500, message } = err;
   res.status(statusCode).send({
     message: statusCode === 500 ? 'На сервере произошла ошибка' : message,

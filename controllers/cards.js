@@ -9,7 +9,13 @@ const createCard = (req, res, next) => {
   const userId = req.user._id;
   Card.create({ name, link, owner: userId })
     .then((user) => res.send({ data: user }))
-    .catch(() => next(new BadRequest('Введите имя карточки и ссылку на картинку')));
+    .catch((err) => {
+      if (err.name === 'ValidationError') {
+        next(new BadRequest('Введите имя карточки и ссылку на картинку'));
+      } else {
+        next(new Error('Произошла ошибка'));
+      }
+    });
 };
 
 const getAllCards = (req, res, next) => {

@@ -1,3 +1,5 @@
+const { Error } = require('mongoose');
+
 class Forbidden extends Error {
   constructor(message) {
     super(message);
