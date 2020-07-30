@@ -1,14 +1,14 @@
 # Mesto Backend for Yandex.Praktikum
 
 ## Бэкенд
-[http://api.varyalikhanina.cf/](http://api.varyalikhanina.cf/)
+[https://api.varyalikhanina.cf/](http://api.varyalikhanina.cf/)
 
-[http://www.api.varyalikhanina.cf/](http://www.api.varyalikhanina.cf/)
+[https://www.api.varyalikhanina.cf/](http://www.api.varyalikhanina.cf/)
 
 ## Фронтенд
-[http://varyalikhanina.cf/](http://varyalikhanina.cf/)
+[https://varyalikhanina.cf/](http://varyalikhanina.cf/)
 
-[http://www.varyalikhanina.cf/](http://www.varyalikhanina.cf/)
+[https://www.varyalikhanina.cf/](http://www.varyalikhanina.cf/)
 
 ## Публичный IPv4
 84.201.158.235
