@@ -1,32 +1,42 @@
 const Card = require('../models/card');
 
-const createCard = (req, res) => {
+const NotFoundError = require('../errors/not-found');
+const Forbidden = require('../errors/forbidden');
+const BadRequest = require('../errors/bad-request');
+
+const createCard = (req, res, next) => {
   const { name, link } = req.body;
   const userId = req.user._id;
   Card.create({ name, link, owner: userId })
     .then((user) => res.send({ data: user }))
-    .catch((err) => res.status(500).send({ message: err.message }));
+    .catch((err) => {
+      if (err.name === 'ValidationError') {
+        next(new BadRequest('Введите имя карточки и ссылку на картинку'));
+      } else {
+        next(new Error('Произошла ошибка'));
+      }
+    });
 };
 
-const getAllCards = (req, res) => {
+const getAllCards = (req, res, next) => {
   Card.find({})
     .then((user) => res.send({ data: user }))
-    .catch((err) => res.status(500).send({ message: err.message }));
+    .catch(next);
 };
 
-const deleteCardbyId = (req, res) => {
+const deleteCardbyId = (req, res, next) => {
   Card.findById(req.params.id)
-    .orFail(() => res.status(404).send({ message: 'Карточки с таким ID не существует' }))
+    .orFail(new NotFoundError('Карточки с таким ID не существует'))
     .then((card) => {
       const { owner } = card;
       if (req.user._id === owner.toString()) {
         Card.findByIdAndRemove(req.params.id)
           .then(() => res.status(200).send({ message: 'Карточка удалена' }));
       } else {
-        return res.status(403).send({ message: 'Вы не можете удалить чужую карточку' });
+        throw new Forbidden('Вы не можете удалить чужую карточку');
       }
     })
-    .catch((err) => res.status(500).send({ message: err.message }));
+    .catch(next);
 };
 
 module.exports = {
